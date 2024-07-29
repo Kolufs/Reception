@@ -1,0 +1,12 @@
+{
+  "name": "Reception",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "https://github.com/Kolufs/Reception",
+  "author": "Adrian Rodrigues <71286732+Kolufs@users.noreply.github.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ]
+}

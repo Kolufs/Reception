@@ -1,0 +1,47 @@
+CREATE TABLE User {
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(32) UNIQUE NOT NULL, 
+    password VARCHAR(32) UNIQUE NOT NULL, 
+}
+
+CREATE TABLE Exam {
+    id INT PRIMARY KEY AUTO_INCREMENT, 
+    name VARCHAR(32) NOT NULL,
+    description TEXT NOT NULL,
+}
+
+CREATE TABLE Lab {
+    id INT PRIMARY KEY AUTO_INCREMENT, 
+    name VARCHAR(32) NOT NULL,
+    phone VARCHAR(32) NOT NULL,
+}
+
+CREATE TABLE ExamLab {
+    id INT PRIMARY KEY AUTO_INCREMENT, 
+    examId INT NOT NULL,
+    labId INT NOT NULL,
+    price DECIMAL(10, 2),
+    FOREIGN KEY (examId) REFERENCES Exam(id),
+    FOREIGN KEY (labId) REFERENCES Lab(id),
+}
+
+CREATE TABLE LabCollection {
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    date DATE NOT NULL,
+    labId INT NOT NULL,
+    capacity INT NOT NULL,
+    FOREIGN KEY (labId) REFERENCES Lab(id),
+}
+
+CREATE TABLE CollectionItem {
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    examId INT NOT NULL,
+    patientName VARCHAR(32) NOT NULL,
+}
+
+CREATE TABLE Collection {
+    id INT PRIMARY KEY AUTO_INCREMENT,
+    labCollectionId INT NOT NULL,
+    collectionItemId INT NOT NULL,
+}
+

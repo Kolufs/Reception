@@ -1,0 +1,68 @@
+x-shared-environment:
+  &postgres_env
+  POSTGRES_DB: somedb
+  POSTGRES_USER: someuser
+  POSTGRES_PASSWORD: somepass
+
+services:
+  database: 
+    image: postgres:13
+    ports:
+      - "5432:2000"
+    environment: *postgres_env
+    command: "cp /schema.sql /docker-entrypoint-initdb.d/"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend_database_network
+
+  backend:
+    build:
+      context: ./packages/backend
+      dockerfile: Dockerfile
+    environment: 
+      <<: *postgres_env
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 2000
+      POSTGRES_MAX: 20
+    ports:
+      - "4000:4000"
+    develop:
+      watch: 
+        - path: ./packages/backend/src
+          action: rebuild
+          ignore:
+            - node_modules
+            - dist
+    depends_on:
+      - database
+    networks:
+      - frontend_backend_network
+      - backend_database_network
+
+  frontend:
+    build:
+      context: ./packages/frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    develop:
+      watch:
+        - path: ./packages/frontend
+          action: rebuild
+          ignore:
+            - node_modules
+            - dist
+    depends_on:
+      - backend
+    networks:
+      - frontend_backend_network
+
+volumes:
+  postgres_data:
+        
+networks: 
+  frontend_backend_network:
+    driver: bridge
+  backend_database_network:
+    driver: bridge
